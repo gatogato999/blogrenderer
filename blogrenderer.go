@@ -1,7 +1,7 @@
 package blogrenderer
 
 import (
-	"fmt"
+	"html/template"
 	"io"
 )
 
@@ -10,27 +10,13 @@ type Post struct {
 	Tags                     []string
 }
 
+const postTemplate = `<h1>{{.Title}}</h1><p>{{.Description}}</p>Tags: <ul>{{range .Tags}}<li>{{.}}</li>{{end}}</ul>`
+
 func Render(buf io.Writer, post Post) error {
-	_, err := fmt.Fprintf(buf, `<h1>%s</h1> <p>%s</p>`, post.Title, post.Description)
+	parsedTemplate, err := template.New("blog").Parse(postTemplate)
 	if err != nil {
 		return err
 	}
-
-	_, err = fmt.Fprint(buf, `Tags: <ul>`)
-	if err != nil {
-		return err
-	}
-
-	for _, tag := range post.Tags {
-		_, err := fmt.Fprintf(buf, `<li>%s</li>`, tag)
-		if err != nil {
-			return err
-		}
-	}
-
-	_, err = fmt.Fprint(buf, `</ul>`)
-	if err != nil {
-		return err
-	}
-	return nil
+	err = parsedTemplate.Execute(buf, post)
+	return err
 }
