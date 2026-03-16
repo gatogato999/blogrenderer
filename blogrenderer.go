@@ -21,6 +21,6 @@ func Render(buf io.Writer, post Post) error {
 	if err != nil {
 		return err
 	}
-	err = parsedTemplate.Execute(buf, post)
+	err = parsedTemplate.ExecuteTemplate(buf, "blog.html", post)
 	return err
 }
