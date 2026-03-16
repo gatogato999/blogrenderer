@@ -18,18 +18,31 @@ func TestRender(t *testing.T) {
 		Tags:        []string{"go", "tdd"},
 	}
 
-	postRend, err := blogrenderer.NewPostRenderer()
+	postRenderer, err := blogrenderer.NewPostRenderer()
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Run("it converts a single post into HTML", func(t *testing.T) {
 		buf := bytes.Buffer{}
-		err = postRend.Render(&buf, aPost)
+		err = postRenderer.Render(&buf, aPost)
 		if err != nil {
 			t.Fatal(err)
 		}
 		approvals.VerifyString(t, buf.String())
+	})
+
+	t.Run("it renders an index of posts", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		posts := []blogrenderer.Post{{Title: "Hello World"}, {Title: "Hello World 2"}}
+		if err := postRenderer.RenderIndex(&buf, posts); err != nil {
+			t.Fatal(err)
+		}
+		got := buf.String()
+		want := `<ol><li><a href="/post/hello-world">Hello World</a></li><li><a href="/post/hello-world-2">Hello World 2</a></li></ol>`
+		if got != want {
+			t.Errorf("\ngot %q \nwant %q", got, want)
+		}
 	})
 }
 

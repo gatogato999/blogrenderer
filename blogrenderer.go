@@ -1,6 +1,7 @@
 package blogrenderer
 
 import (
+	"bytes"
 	"embed"
 	"html/template"
 	"io"
@@ -24,6 +25,18 @@ func (r *PostRenderer) Render(buf io.Writer, post Post) error {
 // To stop us having to re-parse the templates over and over,
 type PostRenderer struct {
 	templ *template.Template
+}
+
+// RenderIndex ;takes an io.Writer and a slice of Post
+func (r *PostRenderer) RenderIndex(buffer *bytes.Buffer, posts []Post) error {
+	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.Title}}">{{.Title}}</a></li>{{end}}</ol>`
+
+	parsedIndexTemplate, err := template.New("index").Parse(indexTemplate)
+	if err != nil {
+		return err
+	}
+
+	return parsedIndexTemplate.Execute(buffer, posts)
 }
 
 // NewPostRenderer create a new renderer type
