@@ -17,13 +17,19 @@ func TestRender(t *testing.T) {
 		Description: "This is a description",
 		Tags:        []string{"go", "tdd"},
 	}
+
+	postRend, err := blogrenderer.NewPostRenderer()
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	t.Run("it converts a single post into HTML", func(t *testing.T) {
 		buf := bytes.Buffer{}
-		err := blogrenderer.Render(&buf, aPost)
+		err = postRend.Render(&buf, aPost)
 		if err != nil {
 			t.Fatal(err)
 		}
-		approvals.VerifyString(t, "Hello World!\n")
+		approvals.VerifyString(t, buf.String())
 	})
 }
 
@@ -37,7 +43,11 @@ func BenchmarkRender(b *testing.B) {
 		Description: "This is a description",
 		Tags:        []string{"go", "tdd"},
 	}
+	postRend, err := blogrenderer.NewPostRenderer()
+	if err != nil {
+		b.Fatal(err)
+	}
 	for b.Loop() {
-		_ = blogrenderer.Render(io.Discard, aPost)
+		_ = postRend.Render(io.Discard, aPost)
 	}
 }
