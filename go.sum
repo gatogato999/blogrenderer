@@ -1,2 +1,3 @@
-github.com/gatogato999/blogposts v0.0.0-20260312022630-83caf10b50b2 h1:KrMLihe4cta5mYbRz2NAwRJ/zFITP9ADkFCfFcRcy6c=
-github.com/gatogato999/blogposts v0.0.0-20260312022630-83caf10b50b2/go.mod h1:6cHuSYRRHVR94l9YQboubnNysJmV809SGQGhWyevy7c=
+github.com/approvals/go-approval-tests v1.2.0 h1:0gnbtkFLryEa7ojI6YSP5SeBHOfYHCWFnOTM8q9BQz4=
+github.com/approvals/go-approval-tests v1.2.0/go.mod h1:Jw45q7bEifPpUkRU2S5GCthnwDxMUWPHTGcNewVh6mw=
+github.com/approvals/go-approval-tests v1.9.0/go.mod h1:i7AlHlLqLyxTby+MnSFgxkObjFlsywI46fnOitjMBiU=

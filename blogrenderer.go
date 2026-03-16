@@ -1,19 +1,23 @@
 package blogrenderer
 
 import (
+	"embed"
 	"html/template"
 	"io"
 )
 
+// Post represent a social media post
 type Post struct {
 	Title, Body, Description string
 	Tags                     []string
 }
 
-const postTemplate = `<h1>{{.Title}}</h1><p>{{.Description}}</p>Tags: <ul>{{range .Tags}}<li>{{.}}</li>{{end}}</ul>`
+//go:embed "templates/*"
+var postTemplate embed.FS
 
+// Render create a HTML page from the given post variable
 func Render(buf io.Writer, post Post) error {
-	parsedTemplate, err := template.New("blog").Parse(postTemplate)
+	parsedTemplate, err := template.ParseFS(postTemplate, "templates/*.html")
 	if err != nil {
 		return err
 	}
