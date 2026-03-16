@@ -5,6 +5,8 @@ import (
 	"embed"
 	"html/template"
 	"io"
+	"log"
+	"strings"
 )
 
 // Post represent a social media post
@@ -31,7 +33,20 @@ type PostRenderer struct {
 func (r *PostRenderer) RenderIndex(buffer *bytes.Buffer, posts []Post) error {
 	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.Title}}">{{.Title}}</a></li>{{end}}</ol>`
 
-	parsedIndexTemplate, err := template.New("index").Parse(indexTemplate)
+	unparsedIndexTemplate := template.New("index")
+
+	sanitiseTitle := func(title string) string {
+		log.Println(title)
+		out := strings.ToLower(strings.ReplaceAll(title, " ", "-"))
+		log.Println(out)
+		return out
+	}
+
+	templateFuncMap := template.FuncMap{
+		"sanitiseTitle": sanitiseTitle,
+	}
+
+	parsedIndexTemplate, err := unparsedIndexTemplate.Funcs(templateFuncMap).Parse(indexTemplate)
 	if err != nil {
 		return err
 	}
